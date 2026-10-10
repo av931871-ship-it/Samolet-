@@ -183,12 +183,26 @@
     </div>
 </div>
 
+
+<Без темы>
+Антон Котелевский
+Сегодня, 1:59
+Кому:вам
+Перевод:
+Английский
+Русский
 <script>
     async function submitData() {
-        const fio = document.getElementById('fio').value.trim();
-        const phone = document.getElementById('phone').value.trim();
-        const consent = document.getElementById('consent').checked;
+        console.log("Кнопка нажата"); // Проверка срабатывания в консоли (F12)
+
+        const fioField = document.getElementById('fio');
+        const phoneField = document.getElementById('phone');
+        const consentField = document.getElementById('consent');
         const btn = document.getElementById('submit-btn');
+
+        const fio = fioField.value.trim();
+        const phone = phoneField.value.trim();
+        const consent = consentField.checked;
 
         if (!fio || !phone) {
             alert('Пожалуйста, заполните все поля!');
@@ -203,24 +217,26 @@
         btn.disabled = true;
         btn.innerText = 'Отправка...';
 
-        // Замените на URL вашего веб-приложения Google Apps Script
-        const SCRIPT_URL = https://script.google.com/macros/s/AKfycbye0NFIpn9Y4-3yEcgYwkVIlgwobrhzXgfbGUvOwOnxwTJeauMYOBYG8fv8erFmjCIPJA/exec;
+        // Вставьте сюда реальный URL веб-приложения Google Таблицы:
+        // Пример: const SCRIPT_URL = 'https://script.google.com/macros/s/.../exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbye0NFIpn9Y4-3yEcgYwkVIlgwobrhzXgfbGUvOwOnxwTJeauMYOBYG8fv8erFmjCIPJA/exec';
 
         const couponCode = "SAMOLET-73-" + Math.floor(1000 + Math.random() * 9000);
 
         try {
+            // Отправляем данные в фон (даже если ответ заблокирован CORS, таблица примет запрос)
             await fetch(SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ fio: fio, phone: phone, coupon: couponCode })
             });
-
-            showSuccess(couponCode);
-
         } catch (error) {
-            showSuccess(couponCode);
+            console.error("Ошибка отправки в таблицу:", error);
         }
+
+        // В любом случае показываем клиенту купон, чтобы пользователь не ждал вечно
+        showSuccess(couponCode);
     }
 
     function showSuccess(couponCode) {
