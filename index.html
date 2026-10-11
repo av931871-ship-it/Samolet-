@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Самолет Плюс | Купон на скидку</title>
+    <!-- Подключаем библиотеку html2canvas для сохранения купона картинкой -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
-            --primary-color: #0052cc; /* Фирменный синий цвет Самолет Плюс */
+            --primary-color: #0052cc; /* Фирменный глубокий синий цвет */
             --primary-hover: #0040a8;
             --bg-color: #f4f6f9;
             --card-bg: #ffffff;
@@ -163,6 +165,13 @@
         .contact-info a:hover {
             text-decoration: underline;
         }
+        .save-btn {
+            background-color: #2baf2b;
+            margin-top: 15px;
+        }
+        .save-btn:hover {
+            background-color: #239023;
+        }
     </style>
 </head>
 <body>
@@ -195,7 +204,9 @@
 <div class="container hidden" id="success-container">
     <h2>Поздравляем!</h2>
     <p class="subtitle">Ваша заявка успешно зарегистрирована.</p>
-    <div class="success-box">
+    
+    <!-- Блок купона для сохранения в картинку -->
+    <div class="success-box" id="capture-area">
         <p style="margin:0; font-size:13px; color:#555;">Ваш персональный купон на скидку:</p>
         <div class="coupon-code" id="coupon-result">---</div>
         
@@ -204,19 +215,20 @@
         </p>
 
         <div class="contact-info">
-            <p><strong>Адрес офиса:</strong> Партизанская, 73</p>
+            <p><strong>Адрес офиса:</strong> ул. Партизанская, 73</p>
             <p><strong>Телефоны для связи:</strong><br>
                📞 <a href="tel:+79248340764">+7 (924) 834-07-64</a><br>
                📞 <a href="tel:+79646511157">+7 (964) 651-11-57</a>
             </p>
         </div>
     </div>
+
+    <!-- Кнопка сохранения -->
+    <button class="save-btn" onclick="saveCouponAsImage()">💾 Сохранить купон</button>
 </div>
 
 <script>
     async function submitData() {
-        console.log("Кнопка нажата");
-
         const fioField = document.getElementById('fio');
         const phoneField = document.getElementById('phone');
         const consentField = document.getElementById('consent');
@@ -263,7 +275,23 @@
         document.getElementById('success-container').classList.remove('hidden');
         document.getElementById('coupon-result').innerText = couponCode;
     }
+
+    // Логика сохранения купона как изображения через html2canvas
+    function saveCouponAsImage() {
+        const captureElement = document.getElementById('capture-area');
+        
+        html2canvas(captureElement, { scale: 2 }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = 'Kupon-Samolet-Plus.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }).catch(err => {
+            console.error('Ошибка сохранения:', err);
+            alert('Не удалось сохранить автоматически. Вы можете сделать скриншот экрана.');
+        });
+    }
 </script>
 
 </body>
 </html>
+
